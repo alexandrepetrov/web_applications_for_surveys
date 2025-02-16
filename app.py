@@ -45,7 +45,18 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Кастомный ModelView с проверкой прав доступа
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.username == 'admin'
 
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login'))
+
+# Инициализация Flask-Admin
+admin = Admin(app, name='Админка', template_mode='bootstrap3')
+admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(SurveyResponse, db.session))
 
 # Регистрация
 @app.route('/register', methods=['GET', 'POST'])
@@ -154,6 +165,16 @@ def thank_you():
 # Создание таблиц в базе данных
 with app.app_context():
     db.create_all()
+# Проверка, существует ли пользователь 'admin'
+    admin_user = User.query.filter_by(username='admin').first()
+    if not admin_user:
+        # Создание пользователя 'admin', если он не существует
+        admin_user = User(username='admin', password=generate_password_hash('admin123'))
+        db.session.add(admin_user)
+        db.session.commit()
+        print("Пользователь 'admin' создан.")
+    else:
+        print("Пользователь 'admin' уже существует.")
 
 if __name__ == '__main__':
     app.run(debug=True)
