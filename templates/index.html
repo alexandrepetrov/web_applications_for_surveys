@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкетирование</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Анкетирование</h1>
+        <form method="POST" action="/submit">
+            <div class="form-group">
+                <label for="name">Ваше имя:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Ваш возраст:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label>Ваш пол:</label>
+                <label><input type="radio" name="gender" value="male" required> Мужской</label>
+                <label><input type="radio" name="gender" value="female"> Женский</label>
+            </div>
+
+            <div class="form-group">
+                <label for="interests">Ваши интересы:</label>
+                <select id="interests" name="interests" multiple>
+                    <option value="sport">Спорт</option>
+                    <option value="music">Музыка</option>
+                    <option value="books">Книги</option>
+                    <option value="travel">Путешествия</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="comments">Ваши комментарии:</label>
+                <textarea id="comments" name="comments" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label><input type="checkbox" name="agree" required> Я согласен(а) на обработку данных</label>
+            </div>
+
+            <button type="submit" class="submit-button">Отправить</button>
+        </form>
+
+        <a href="{{ url_for('logout') }}"><button>Выйти</button></a>
+        <a href="{{ url_for('results') }}"><button>Перейти к результатам анкетирования</button></a>
+
+    </div>
+</body>
+
+</html>
